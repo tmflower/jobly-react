@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import CompanyCard from "./CompanyCard";
 import JoblyApi from "../api";
 
