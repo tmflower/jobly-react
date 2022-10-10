@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
-const Login = () => {
+// displays a form that allows user to login to an existing account
+// when submitted, the login function sets this user and their token as current in state
+const LoginForm = ({ login, logout, currentUser }) => {
 
     const initial_state = {
         username: '',
@@ -13,29 +15,27 @@ const Login = () => {
 
     const handleChange = (evt) => {
         const { name, value } = evt.target;
-        // console.log(name);
-        // console.log(value);
         setFormData(data => ({ ...data, [name]: value}));
-        console.log(formData);
     }
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        handleChange();
+        const user = { username, password };
+        login(user);
         setFormData(initial_state);
     }
     return (
         <div>
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="username">
-                <input type="text" name="username" value={username} id="username" onChange={handleChange}></input>Username:</label>
-                <label htmlFor="password">
-                <input type="text" name="password" value={password} id="password" onChange={handleChange}></input>Password:</label>
+                <label htmlFor="username">Username:
+                <input type="text" name="username" value={username} id="username" onChange={handleChange}></input></label>
+                <label htmlFor="password">Password:
+                <input type="text" name="password" value={password} id="password" onChange={handleChange}></input></label>
                 <button>Submit</button>
             </form>
         </div>
     )
 }
 
-export default Login;
+export default LoginForm;

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import JoblyApi from "../api";
 import JobCard from "./JobCard";
+import { userContext } from "./userContext";
+import { useNavigate } from "react-router-dom";
 
 const JobsList = () => {
+
+    // provides current username
+    const username = React.useContext(userContext);
 
     // sets initial state of jobs to empty array; will be filled with data from api;
     const [jobs, setJobs] = useState([]);
@@ -35,18 +40,42 @@ const JobsList = () => {
         searchJobs(searchTerm);        
     }
 
+    // provides onClick function for button that redirects user to log in, if not logged in already
+    const navigate = useNavigate();
+    const forceLogin = () => {
+        navigate("/login", { replace: true });
+    }
+
+    // if no logged-in user, jobs are hidden and user is prompted to login
+    // if user is logged in:
     // displays a list of all the jobs displaying the title, company, salary, and equity for each job
     // displays a search bar allowing user to filter jobs by job title
     return (
         <div>
             <h1>Jobs</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="searchTerm">
-                <input id="searchTerm" type="text" placeholder="Enter search terms" name="searchTerm" value={searchTerm} onChange={handleChange}/></label>
-                <button>Submit</button> 
-            </form> 
-            <JobCard />
-            {jobs.map(job => (<JobCard title={job.title} company={job.companyName} salary={job.salary} equity={job.equity} key={job.id}/>))}
+            { username === null ? <div><h3>You must log in to see our jobs.</h3><button onClick={forceLogin}>Log In</button></div> :
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="searchTerm">
+                    <input 
+                        id="searchTerm" 
+                        type="text" 
+                        placeholder="Enter search terms" 
+                        name="searchTerm" 
+                        value={searchTerm} 
+                        onChange={handleChange}/></label>
+                    <button>Submit</button> 
+                </form> 
+                <JobCard />
+                {jobs.map(job => (<JobCard 
+                                    id={job.id}
+                                    title={job.title} 
+                                    company={job.companyName} 
+                                    salary={job.salary} 
+                                    equity={job.equity} 
+                                    key={job.id}/>))}
+            </div>
+            }
         </div>
     )
 }

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import CompanyCard from "./CompanyCard";
 import JoblyApi from "../api";
-
-// still need to fix so that user can go back to seeing all companies when clicking on NavLink for companies
+import { userContext } from "./userContext";
 
 const CompaniesList = () => {
+
+    // provides current username
+    const username = React.useContext(userContext);
 
     // sets initial state for companies and search term to empty/blank
     const [companies, setCompanies] = useState([]);
@@ -38,17 +40,40 @@ const CompaniesList = () => {
         searchCompanies(searchTerm);        
     }
 
+    // provides onClick function for button that redirects user to log in, if not logged in already
+    const navigate = useNavigate();
+    const forceLogin = () => {
+        navigate("/login", { replace: true });
+    }
+
+    // if no logged in user, hides companies list and prompts user to log in
+    // if user is logged in:
     // displays a list containing names and descriptions of all companies on initial load; updates to show filtered results when search terms are entered
     // displays a search bar allowing user to filter companies by name
     return (
         <div>
             <h1>Companies</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="searchTerm">
-                <input id="searchTerm" type="text" placeholder="Enter search terms" name="searchTerm" value={searchTerm} onChange={handleChange}/></label>
-                <button>Submit</button> 
-            </form>            
-                {companies.map(c => (<NavLink to={`/companies/${c.handle}`} key={c.handle}><CompanyCard name={c.name} description={c.description} key={c.handle} /></NavLink>))}                                                      
+            { username === null ? <div><h3>You must log in to see our companies.</h3><button onClick={forceLogin}>Log In</button></div> : 
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="searchTerm">
+                    <input 
+                    id="searchTerm" 
+                    type="text" 
+                    placeholder="Enter search terms" 
+                    name="searchTerm" 
+                    value={searchTerm} 
+                    onChange={handleChange}/></label>
+                    <button>Submit</button> 
+                </form>            
+                    {companies.map(c => (<NavLink 
+                    to={`/companies/${c.handle}`} 
+                    key={c.handle}><CompanyCard 
+                    name={c.name} 
+                    description={c.description} 
+                    key={c.handle} /></NavLink>))} 
+            </div>
+            }                                        
         </div>
     )
 }

@@ -13,6 +13,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 class JoblyApi {
   // the token for interactive with the API will be stored here.
   static token;
+  
 
   static async request(endpoint, data = {}, method = "get") {
     console.debug("API Call:", endpoint, data, method);
@@ -56,11 +57,71 @@ class JoblyApi {
     let res = await this.request(`jobs/`, {title});
     return res.jobs;
   }
-}
 
+  // register a new user and provide token
+  
+  static async registerUser(newUser) {
+    console.log('inside registerUser function in api')
+    const data = await axios.post(`${BASE_URL}/auth/register/`, newUser);
+    JoblyApi.token = data.data.token;
+    // console.log(JoblyApi.token);
+    return JoblyApi.token;
+  }
+
+  // provide token for logged in user
+
+  static async authenticateUser(user) {
+    console.log('inside authenticateUser in api');
+    const data = await axios.post(`${BASE_URL}/auth/token`, user);
+    JoblyApi.token = data.data.token;
+    return JoblyApi.token;
+  }
+
+  // get details on an individual user
+
+  static async getUser(username) {
+    console.log('inside get user in api');
+    let res = await this.request(`users/${username}`);
+    console.log(res.user);
+    return res.user;
+  }
+
+  // update details on an individual user
+  // takes 2 arguments, first is username, second is the data to update
+
+  static async updateUser(username, updatedUserData) {
+    console.log('inside updateUser in api');
+    console.log(username); // this is correctly returning username :)
+    // console.log({username, ...updatedUserData}) //this is correctly returning the object with the new data from the form (including password)
+    // const data = {username, ...updatedUserData}
+    let res = await this.request(`users/${username}`, updatedUserData, "patch");
+    console.log(res.user);
+    return res.user;
+  }
+
+  // Get details on a job by id.
+
+  static async getJob(id) {
+    let res = await this.request(`jobs/${id}`);
+    return res.job;
+  }
+
+  // Add job to user's list of applied jobs
+
+  static async addToAppliedJobs(username, jobId) {
+    let res = await this.request(`users/${username}/jobs/${jobId}`, jobId, "post");
+    return res.jobId;
+  }
+
+  // static async saveProfile(username, data) {
+  //   let res = await this.request(`users/${username}`, data, "patch");
+  //   return res.user;
+  // }
+
+}
 // for now, put token ("testuser" / "password" on class)
-JoblyApi.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ" +
-    "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
-    "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";
+// JoblyApi.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ" +
+//     "SI6InRlc3R1c2VyIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTU5ODE1OTI1OX0." +
+//     "FtrMwBQwe6Ue-glIFgz_Nf8XxRT2YecFCiSpYL0fCXc";
 
 export default JoblyApi;
