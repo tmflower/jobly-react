@@ -11,7 +11,6 @@ import SignupForm from './Components/Signup';
 import Profile from './Components/Profile';
 import JoblyApi from './api';
 import jwt from 'jsonwebtoken';
-// import { usernameContext } from './usernameContext';
 import { userContext } from './Components/userContext';
 
 function App() {
@@ -21,7 +20,7 @@ function App() {
 
   // sets an initial value of null to the current logged in user
   // checks for existing token in localStorage; if one exists, sets it at initial value; otherwise, sets initial value of null
-  const [currentUser, setCurrentUser] = useState({});
+  // const [currentUser, setCurrentUser] = useState({});
   const [currentUsername, setCurrentUsername] = useState(null);
   const [token, setToken] = useState(() => {
     let value;
@@ -37,16 +36,8 @@ function App() {
       console.log('inside useEffect');
       if (token) {
         window.localStorage.setItem('token', `"${token}"`);
-        // console.log("Token:", token);
         const user = jwt.decode(token);
-        setCurrentUsername(user.username);
-
-        // const userData = await JoblyApi.getUser(user.username);
-        // console.log("**********************************")
-        // console.log(userData);
-        // setCurrentUser(userData);
-        // console.log(currentUser);
-        
+        setCurrentUsername(user.username);       
         navigate("/", { replace: true });
       }
       else {
@@ -61,7 +52,7 @@ function App() {
   // this function is called when the user submits the login form
   async function login(user) {
     await JoblyApi.authenticateUser(user);
-    setCurrentUser(user.username);
+    setCurrentUsername(user.username);
     setToken(JoblyApi.token);
   }
   
@@ -70,7 +61,7 @@ function App() {
   // this function is called when the user submits the signup form
   async function signup (newUser) {
     await JoblyApi.registerUser(newUser);
-    setCurrentUser(newUser.username);
+    setCurrentUsername(newUser.username);
     setToken(JoblyApi.token);
   }
 
@@ -86,7 +77,6 @@ function App() {
   return (    
     <div className="App">
       <userContext.Provider value={ currentUsername }>
-      {/* <usernameContext.Provider value={userData}>       */}
       <Navbar logout={logout}/>
       <Routes>
         <Route path="/" element={<Homepage />}></Route>
@@ -97,7 +87,6 @@ function App() {
         <Route path="/signup" element={<SignupForm signup={signup} />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
       </Routes>
-      {/* </usernameContext.Provider> */}
       </userContext.Provider>
 
     </div>

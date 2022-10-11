@@ -21,8 +21,6 @@ const Profile = () => {
         getUser();
     }, []);
 
-    // console.log('****************************')
-    // console.log(userDetails)
 
     // this function is called when user enters new profile data in the ProfileUpdateForm
     // saves this new data in state
@@ -42,14 +40,8 @@ const Profile = () => {
     }, [newDetails]);
 
 
-    // currently this seems to not do anything
-    if (userDetails === {}) {
-        return ('Loading...')
-    }
-
     return (
         <div>
-            { userDetails !== {} ?
             <div>
                 <h1>Profile</h1>
                 <p>Username: {username}</p>
@@ -57,10 +49,9 @@ const Profile = () => {
                 <p>Last name: {userDetails.lastName}</p>
                 <p>email: {userDetails.email}</p>
                 <form>
-                    <ProfileUpdateForm getDetailsForUpdate={getDetailsForUpdate} userDetails={userDetails}/>
+                    <ProfileUpdateForm getDetailsForUpdate={getDetailsForUpdate} />
                 </form>
             </div>
-               : <h1>SOMETHING WENT WRONG</h1> }
         </div>
     )
 }

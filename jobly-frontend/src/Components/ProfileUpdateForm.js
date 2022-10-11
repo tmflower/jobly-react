@@ -1,10 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import JoblyApi from "../api";
+import { userContext } from "./userContext";
 
 // displays a form allowing user to change their profile data
-const ProfileUpdateForm = ({getDetailsForUpdate, userDetails}) => {
+const ProfileUpdateForm = ({getDetailsForUpdate}) => {
 
-    console.log('*******************');
-    console.log(userDetails)
+    // console.log('*******************');
+    // console.log(userDetails)
+
+    const username = React.useContext(userContext);
+    const [userDetails, setUserDetails] = useState({});
+
+    useEffect(() => {
+        async function getUser() {
+            const details = await JoblyApi.getUser(username);
+            setUserDetails({...details});
+        }
+        getUser();
+    }, []);
+
     // sets the intial value of each form field to the user's current data
     const [formData, setFormData] = useState({
         firstName: userDetails.firstName,
@@ -40,11 +54,11 @@ const ProfileUpdateForm = ({getDetailsForUpdate, userDetails}) => {
     return (
         <div>
             <label htmlFor="firstName">First name:
-            <input type="text" name="firstName" value={firstName} id="firstName" placeholder={userDetails.firstName} onChange={handleChange}></input></label>
+            <input type="text" name="firstName" value={firstName} id="firstName" onChange={handleChange}></input></label>
             <label htmlFor="lastName">Last name:
-            <input type="text" name="lastName" value={lastName} id="lastName" placeholder={userDetails.lastName}onChange={handleChange}></input></label>
+            <input type="text" name="lastName" value={lastName} id="lastName" onChange={handleChange}></input></label>
             <label htmlFor="email">Email:
-            <input type="text" name="email" value={email} id="email" placeholder={userDetails.email}onChange={handleChange}></input></label>
+            <input type="text" name="email" value={email} id="email" onChange={handleChange}></input></label>
             <label htmlFor="password">Confirm password to make changes:
             <input type="text" name="password" value={password} id="password" onChange={handleChange}></input></label>
             <button onClick={handleSubmit}>Submit</button>

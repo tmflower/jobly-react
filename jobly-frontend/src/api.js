@@ -91,9 +91,7 @@ class JoblyApi {
 
   static async updateUser(username, updatedUserData) {
     console.log('inside updateUser in api');
-    console.log(username); // this is correctly returning username :)
-    // console.log({username, ...updatedUserData}) //this is correctly returning the object with the new data from the form (including password)
-    // const data = {username, ...updatedUserData}
+    console.log(username);
     let res = await this.request(`users/${username}`, updatedUserData, "patch");
     console.log(res.user);
     return res.user;

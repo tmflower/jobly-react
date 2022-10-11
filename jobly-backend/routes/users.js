@@ -72,6 +72,8 @@ router.get("/", ensureAdmin, async function (req, res, next) {
 router.get("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
   try {
     const user = await User.get(req.params.username);
+    console.log('inside backed user model');
+    console.log(user);
     return res.json({ user });
   } catch (err) {
     return next(err);
