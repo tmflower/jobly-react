@@ -1,31 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import JoblyApi from "../api";
-import { userContext } from "./userContext";
+import userContext from "./userContext";
 
 // displays a form allowing user to change their profile data
-const ProfileUpdateForm = ({getDetailsForUpdate}) => {
+const ProfileUpdateForm = ({getDetailsForUpdate, userDetails, setUserDetails}) => {
 
-    // console.log('*******************');
-    // console.log(userDetails)
+    console.log('*******************');
+    console.log(userDetails)
 
     const username = React.useContext(userContext);
-    const [userDetails, setUserDetails] = useState({});
 
-    useEffect(() => {
-        async function getUser() {
-            const details = await JoblyApi.getUser(username);
-            setUserDetails({...details});
-        }
-        getUser();
-    }, []);
-
-    // sets the intial value of each form field to the user's current data
-    const [formData, setFormData] = useState({
+    const initial_state = ({
         firstName: userDetails.firstName,
         lastName:  userDetails.lastName,
         email: userDetails.email,
         password: ''
     });
+
+    // sets the intial value of each form field to the user's current data
+    const [formData, setFormData] = useState(initial_state);
 
     // creates a variable for each field in the form
     const { firstName, lastName, email, password } = formData;
@@ -33,35 +26,56 @@ const ProfileUpdateForm = ({getDetailsForUpdate}) => {
     // changes the value of each field for which data is entered
     const handleChange = (evt) => {
         const { name, value } = evt.target;
-        setFormData(formData => ({ ...formData, [name]: value}));
+        setFormData((formData) => ({ ...formData, [name]: value }));
     }
 
     // creates an object containing the data entered by the user
     // calls the function from the Profile component that makes the API call to update the data in the db
-    // clears the form data
-    const handleSubmit = (evt) => {
+    // updates the form fields with the new user details
+
+    async function handleSubmit (evt) {
         evt.preventDefault();
         const updatedUserData = { firstName, lastName, email, password }  
-        getDetailsForUpdate(updatedUserData); 
-        setFormData({
-            firstName: '',
-            lastName:  '',
-            email: '',
-            password: ''
-        });
+        console.log('UPDATED USER DATA:', updatedUserData)
+        const updatedUser = await JoblyApi.updateUser(username, updatedUserData);
+        setUserDetails({ username, ...updatedUser })
+        setFormData(initial_state);
     }
 
     return (
         <div>
-            <label htmlFor="firstName">First name:
-            <input type="text" name="firstName" value={firstName} id="firstName" onChange={handleChange}></input></label>
-            <label htmlFor="lastName">Last name:
-            <input type="text" name="lastName" value={lastName} id="lastName" onChange={handleChange}></input></label>
-            <label htmlFor="email">Email:
-            <input type="text" name="email" value={email} id="email" onChange={handleChange}></input></label>
-            <label htmlFor="password">Confirm password to make changes:
-            <input type="text" name="password" value={password} id="password" onChange={handleChange}></input></label>
-            <button onClick={handleSubmit}>Submit</button>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="firstName">First name:</label>
+                <input 
+                    type="text" 
+                    name="firstName" 
+                    value={firstName} 
+                    id="firstName" 
+                    placeholder={firstName} 
+                    onChange={handleChange} />
+                <label htmlFor="lastName">Last name:</label>
+                <input 
+                    type="text" 
+                    name="lastName" 
+                    value={lastName} 
+                    id="lastName" 
+                    onChange={handleChange} />
+                <label htmlFor="email">Email:</label>
+                <input 
+                    type="text" 
+                    name="email" 
+                    value={email} 
+                    id="email" 
+                    onChange={handleChange} />
+                <label htmlFor="password">Confirm password to make changes:</label>
+                <input 
+                    type="text" 
+                    name="password" 
+                    value={password} 
+                    id="password" 
+                    onChange={handleChange} />
+                <button>Submit</button>
+            </form>
         </div>
     )
 }

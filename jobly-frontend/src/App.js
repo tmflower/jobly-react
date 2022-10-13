@@ -11,7 +11,7 @@ import SignupForm from './Components/Signup';
 import Profile from './Components/Profile';
 import JoblyApi from './api';
 import jwt from 'jsonwebtoken';
-import { userContext } from './Components/userContext';
+import userContext from './Components/userContext';
 
 function App() {
 
@@ -22,6 +22,7 @@ function App() {
   // checks for existing token in localStorage; if one exists, sets it at initial value; otherwise, sets initial value of null
   // const [currentUser, setCurrentUser] = useState({});
   const [currentUsername, setCurrentUsername] = useState(null);
+  const [userDetails, setUserDetails] = useState({});
   const [token, setToken] = useState(() => {
     let value;
     value = JSON.parse(
@@ -37,7 +38,10 @@ function App() {
       if (token) {
         window.localStorage.setItem('token', `"${token}"`);
         const user = jwt.decode(token);
-        setCurrentUsername(user.username);       
+        JoblyApi.token = token;
+        setCurrentUsername(user.username); 
+        const details = await JoblyApi.getUser(user.username);
+        setUserDetails({...details});     
         navigate("/", { replace: true });
       }
       else {
@@ -45,8 +49,8 @@ function App() {
       }    
     }
     updateCurrentUsername();
+    console.log('USER DETAILS IN APP.JS:', userDetails);
   }, [token]);
-
 
   // checks username and password and if valid, sets this user to currentUser and saves their token in state
   // this function is called when the user submits the login form
@@ -74,18 +78,19 @@ function App() {
     navigate("/login", { replace: true });
   }
 
+
   return (    
     <div className="App">
-      <userContext.Provider value={ currentUsername }>
+      <userContext.Provider value={ currentUsername }>          
       <Navbar logout={logout}/>
       <Routes>
         <Route path="/" element={<Homepage />}></Route>
-        <Route path="/companies" element={<CompaniesList login={login}/>}></Route>
+        <Route path="/companies" element={<CompaniesList login={login} />}></Route>
         <Route path="/companies/:company" element={<CompanyDetail />}></Route>
-        <Route path="/jobs" element={<JobsList />}></Route>
+        <Route path="/jobs" element={<JobsList userDetails={userDetails} />}></Route>
         <Route path="/login" element={<LoginForm login={login} />}></Route>
         <Route path="/signup" element={<SignupForm signup={signup} />}></Route>
-        <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/profile" element={<Profile userDetails={userDetails} setUserDetails={setUserDetails} />}></Route>
       </Routes>
       </userContext.Provider>
 

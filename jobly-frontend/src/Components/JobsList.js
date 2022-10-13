@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import JoblyApi from "../api";
 import JobCard from "./JobCard";
-import { userContext } from "./userContext";
+import userContext from "./userContext";
 import { useNavigate } from "react-router-dom";
 
-const JobsList = () => {
+const JobsList = ({ userDetails }) => {
 
     // provides current username
     const username = React.useContext(userContext);
@@ -66,14 +66,14 @@ const JobsList = () => {
                         onChange={handleChange}/></label>
                     <button>Submit</button> 
                 </form> 
-                <JobCard />
                 {jobs.map(job => (<JobCard 
                                     id={job.id}
                                     title={job.title} 
                                     company={job.companyName} 
                                     salary={job.salary} 
                                     equity={job.equity} 
-                                    key={job.id}/>))}
+                                    key={job.id}
+                                    userDetails={userDetails} />))}
             </div>
             }
         </div>

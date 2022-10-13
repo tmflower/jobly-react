@@ -1,5 +1,5 @@
 import React from "react";
-import { userContext } from "./userContext";
+import userContext from "./userContext";
 
 const Homepage = () => {
 

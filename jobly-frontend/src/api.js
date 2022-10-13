@@ -107,14 +107,10 @@ class JoblyApi {
   // Add job to user's list of applied jobs
 
   static async addToAppliedJobs(username, jobId) {
+    console.log(username, jobId)
     let res = await this.request(`users/${username}/jobs/${jobId}`, jobId, "post");
     return res.jobId;
   }
-
-  // static async saveProfile(username, data) {
-  //   let res = await this.request(`users/${username}`, data, "patch");
-  //   return res.user;
-  // }
 
 }
 // for now, put token ("testuser" / "password" on class)

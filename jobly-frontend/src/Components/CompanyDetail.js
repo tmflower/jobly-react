@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import JoblyApi from "../api";
 import JobCard from "./JobCard";
-import { userContext } from "./userContext";
+import userContext from "./userContext";
 
 const CompanyDetail = () => {
 

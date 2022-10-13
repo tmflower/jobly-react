@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { userContext } from "./userContext";
+import userContext from "./userContext";
 
 // renders navigation links to allow user to move easily from feature to feature
 const Navbar = ({logout}) => {
