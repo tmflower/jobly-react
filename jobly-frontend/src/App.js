@@ -34,22 +34,17 @@ function App() {
   // if no token exists, user receives a message and is redirected to login
   useEffect(() => {
     async function updateCurrentUsername() {
-      console.log('inside useEffect');
       if (token) {
         window.localStorage.setItem('token', `"${token}"`);
         const user = jwt.decode(token);
         JoblyApi.token = token;
         setCurrentUsername(user.username); 
         const details = await JoblyApi.getUser(user.username);
-        setUserDetails({...details});     
+        setUserDetails({...details});             
         navigate("/", { replace: true });
-      }
-      else {
-        console.log('not logged in');
-      }    
+      }   
     }
     updateCurrentUsername();
-    console.log('USER DETAILS IN APP.JS:', userDetails);
   }, [token]);
 
   // checks username and password and if valid, sets this user to currentUser and saves their token in state
@@ -69,12 +64,14 @@ function App() {
     setToken(JoblyApi.token);
   }
 
-  // removes the currentUser and their token from state
+  // removes the currentUser and their token from state & local storage
+  // if first time user, removes username from local storage so they will receive returning user greeting on next login
   // this function is called when the user clicks the logout button
   const logout = () => {
     setCurrentUsername(null);
     setToken(null);
     window.localStorage.removeItem('token', `"${token}"`);
+    window.localStorage.removeItem('newUsername');
     navigate("/login", { replace: true });
   }
 

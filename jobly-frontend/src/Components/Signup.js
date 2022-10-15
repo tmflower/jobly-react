@@ -24,7 +24,8 @@ const SignupForm = ({ signup }) => {
     const handleSubmit = (evt) => {
         evt.preventDefault();
         const newUser = { username, password, firstName, lastName, email }    
-        signup(newUser); 
+        signup(newUser);
+        window.localStorage.setItem('newUsername', username);
         setFormData(initial_state);
     }
 

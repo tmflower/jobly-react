@@ -3,10 +3,7 @@ import JoblyApi from "../api";
 import userContext from "./userContext";
 
 // displays a form allowing user to change their profile data
-const ProfileUpdateForm = ({getDetailsForUpdate, userDetails, setUserDetails}) => {
-
-    console.log('*******************');
-    console.log(userDetails)
+const ProfileUpdateForm = ({ userDetails, setUserDetails}) => {
 
     const username = React.useContext(userContext);
 
@@ -32,13 +29,11 @@ const ProfileUpdateForm = ({getDetailsForUpdate, userDetails, setUserDetails}) =
     // creates an object containing the data entered by the user
     // calls the function from the Profile component that makes the API call to update the data in the db
     // updates the form fields with the new user details
-
     async function handleSubmit (evt) {
         evt.preventDefault();
-        const updatedUserData = { firstName, lastName, email, password }  
-        console.log('UPDATED USER DATA:', updatedUserData)
+        const updatedUserData = { firstName, lastName, email, password };
         const updatedUser = await JoblyApi.updateUser(username, updatedUserData);
-        setUserDetails({ username, ...updatedUser })
+        setUserDetails({ username, ...updatedUser });
         setFormData(initial_state);
     }
 
