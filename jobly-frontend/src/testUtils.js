@@ -5,14 +5,15 @@ const demoUser = {
   username: "testuser",
   first_name: "testfirst",
   last_name: "testlast",
-  email: "test@test.net"
+  email: "test@test.net",
+  applications: [34, 87, 102]
 };
 
 const UserProvider =
-    ({ children, currentUser = demoUser, hasAppliedToJob = () => false }) => (
-    <userContext.Provider value={{ currentUser, hasAppliedToJob }}>
-      {children}
-    </userContext.Provider>
+    ({ children, currentUser = demoUser }) => (
+      <userContext.Provider value={{ currentUser }}>
+        {children}
+      </userContext.Provider>
 );
 
-export { UserProvider };
+export { UserProvider, demoUser };
