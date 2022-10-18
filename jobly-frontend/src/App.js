@@ -20,7 +20,6 @@ function App() {
 
   // sets an initial value of null to the current logged in user
   // checks for existing token in localStorage; if one exists, sets it at initial value; otherwise, sets initial value of null
-  // const [currentUser, setCurrentUser] = useState({});
   const [currentUsername, setCurrentUsername] = useState(null);
   const [userDetails, setUserDetails] = useState({});
   const [token, setToken] = useState(() => {
@@ -41,7 +40,6 @@ function App() {
         setCurrentUsername(user.username); 
         const details = await JoblyApi.getUser(user.username);
         setUserDetails({...details});             
-        navigate("/", { replace: true });
       }   
     }
     updateCurrentUsername();
@@ -53,6 +51,7 @@ function App() {
     await JoblyApi.authenticateUser(user);
     setCurrentUsername(user.username);
     setToken(JoblyApi.token);
+    navigate("/", { replace: true });
   }
   
   // adds a new user account when valid required credentials are provided
