@@ -66,7 +66,6 @@ class JoblyApi {
   }
 
   // update details on an individual user
-  // takes 2 arguments, first is username, second is the data to update
   static async updateUser(username, updatedUserData) {
     let res = await this.request(`users/${username}`, updatedUserData, "patch");
     console.log(res.user);
@@ -84,6 +83,6 @@ class JoblyApi {
     let res = await this.request(`users/${username}/jobs/${jobId}`, jobId, "post");
     return res.jobId;
   }
-}
+}   
 
 export default JoblyApi;

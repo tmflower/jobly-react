@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import JobCard from "./JobCard";
-import { UserProvider, demoUser } from "../testUtils";
+import { UserProvider, demoUser } from "../../../testUtils";
 import { MemoryRouter } from "react-router-dom";
 
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import JoblyApi from "../api";
+import JoblyApi from "../../api.js";
 import userContext from "./userContext";
+import "./Profile.css";
 
 // displays a form allowing user to change their profile data
 const ProfileUpdateForm = ({ userDetails, setUserDetails}) => {
@@ -39,9 +40,9 @@ const ProfileUpdateForm = ({ userDetails, setUserDetails}) => {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form className="profile-form" onSubmit={handleSubmit}>
                 <label htmlFor="firstName">First name:</label>
-                <input 
+                <input
                     type="text" 
                     name="firstName" 
                     value={firstName} 
@@ -69,7 +70,7 @@ const ProfileUpdateForm = ({ userDetails, setUserDetails}) => {
                     value={password} 
                     id="password" 
                     onChange={handleChange} />
-                <button>Submit</button>
+                <button className="profile-button">Submit</button>
             </form>
         </div>
     )

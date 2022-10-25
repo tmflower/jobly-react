@@ -1,0 +1,31 @@
+@media(min-width: 280px) {
+    .job-card {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid black;
+        border-radius: 10px;
+        margin: 1em;
+        background-color: white;
+    }
+    .job-info {        
+        padding: .5em;
+        text-align: left;       
+    }
+    .job-title {
+        color: rgb(87, 54, 238);
+    }
+    .apply-button {
+        font-size: .5em;
+        box-shadow: none;
+        color: white;
+        height: 20%;       
+    }
+}
+
+@media(min-width: 768px) {
+    .job-card {
+        margin: 2em 15em;
+    }
+}

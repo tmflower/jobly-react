@@ -1,5 +1,7 @@
 import React from "react";
 import userContext from "./userContext";
+import "./Homepage.css";
+import { NavLink } from "react-router-dom";
 
 const Homepage = () => {
 
@@ -26,10 +28,16 @@ const Homepage = () => {
     }
 
     return (
-        <div>
-            <h1>Jobly</h1>
-            <p>All the jobs in one, convenient place.</p>
-            <h2>{greeting}</h2>
+        <div className="homepage">
+            <div className="background-balloon">
+            <h1 className="title">Happily Hired</h1>
+            <h3 className="subtitle">We'll help you find the job of your dreams.</h3>
+            <p className="greeting">{greeting}</p>
+            {!username && !newUsername ? 
+            <div className="home-buttons"><NavLink to="/login"><button>Log in</button></NavLink><NavLink to="/signup"><button>Sign up</button></NavLink>
+            <p className="demo">Try a demo: username "demo", password "demo123"</p></div>
+            : null}
+            </div>
         </div>
     )
 }

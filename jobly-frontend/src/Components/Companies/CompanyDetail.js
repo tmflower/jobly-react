@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import JoblyApi from "../api";
-import JobCard from "./JobCard";
-import userContext from "./userContext";
+import JoblyApi from "../../api.js";
+import JobCard from "../Jobs/JobCard";
+import userContext from "../Layout/userContext";
+import "./CompanyDetail.css";
 
-const CompanyDetail = () => {
+const CompanyDetail = ({ applications, addJob }) => {
 
     // provides current username
     const username = React.useContext(userContext);
@@ -40,18 +41,24 @@ const CompanyDetail = () => {
     // displays details about selected company, including a list of that company's jobs
     return (
         <div>
-            <h1>Company Detail Component</h1>
             { username === null ? <div><h3>You must log in to see our company information.</h3><button onClick={forceLogin}>Log In</button></div> : 
             <div>
-              <h2>{ company.name }</h2>
-              <p>{ company.description }</p>  
-              <h2>List of jobs at this company(i.e. JobCards):</h2> 
+              <div className="company-info">
+                <h2>{ company.name }</h2>
+                <p>{ company.description }</p>  
+              </div>
+              <h3>{ company.name } is currently accepting applications for:</h3> 
               {company.jobs.map(job => (<JobCard 
+                                          id={job.id}
                                           title={job.title} 
                                           company={job.companyName} 
                                           salary={job.salary} 
                                           equity={job.equity} 
-                                          key={job.id}/>))} 
+                                          key={job.id}
+                                          applications={applications}
+                                          addJob={addJob}/>))} 
+                                          
+                                          
               </div>    
             }                    
         </div>

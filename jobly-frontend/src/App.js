@@ -1,27 +1,28 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import Navbar from './Components/Navbar';
-import Homepage from './Components/Homepage';
-import CompaniesList from './Components/CompaniesList';
-import CompanyDetail from './Components/CompanyDetail';
-import JobsList from './Components/JobsList';
-import LoginForm from './Components/Login';
-import SignupForm from './Components/Signup';
-import Profile from './Components/Profile';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Navbar from './Components/Layout/Navbar';
+import Homepage from './Components/Layout/Homepage';
+import CompaniesList from './Components/Companies/CompaniesList';
+import CompanyDetail from './Components/Companies/CompanyDetail';
+import JobsList from './Components/Jobs/JobsList';
+import LoginForm from './Components/Layout/Login';
+import SignupForm from './Components/Layout/Signup';
+import Profile from './Components/Layout/Profile';
 import JoblyApi from './api';
 import jwt from 'jsonwebtoken';
-import userContext from './Components/userContext';
+import userContext from './Components/Layout/userContext';
 
 function App() {
 
-  // this function is used during authentication to redirect the user to a new location
   const navigate = useNavigate();
 
   // sets an initial value of null to the current logged in user
   // checks for existing token in localStorage; if one exists, sets it at initial value; otherwise, sets initial value of null
   const [currentUsername, setCurrentUsername] = useState(null);
   const [userDetails, setUserDetails] = useState({});
+  const [applications, setApplications] = useState(userDetails.applications || []);
+  // const [applied, setApplied] = useState(false);
   const [token, setToken] = useState(() => {
     let value;
     value = JSON.parse(
@@ -61,6 +62,7 @@ function App() {
     await JoblyApi.registerUser(newUser);
     setCurrentUsername(newUser.username);
     setToken(JoblyApi.token);
+    navigate("/", { replace: true });
   }
 
   // removes the currentUser and their token from state & local storage
@@ -74,6 +76,17 @@ function App() {
     navigate("/login", { replace: true });
   }
 
+  async function addJob(username, id) {
+    try {
+        const newJob = await JoblyApi.addToAppliedJobs(username, id);
+        console.log("newJob:", newJob);
+        setApplications({...applications, newJob});   
+        // setApplied(true); 
+    }
+    catch (e) {
+        return (e);
+    }    
+}
 
   return (    
     <div className="App">
@@ -81,12 +94,13 @@ function App() {
       <Navbar logout={logout}/>
       <Routes>
         <Route path="/" element={<Homepage />}></Route>
-        <Route path="/companies" element={<CompaniesList login={login} />}></Route>
-        <Route path="/companies/:company" element={<CompanyDetail />}></Route>
-        <Route path="/jobs" element={<JobsList userDetails={userDetails} />}></Route>
+        <Route path="/companies" element={<CompaniesList login={login} applications={userDetails.applications}/>}></Route>
+        <Route path="/companies/:company" element={<CompanyDetail applications={userDetails.applications} addJob={addJob}/>}></Route>
+        <Route path="/jobs" element={<JobsList applications={userDetails.applications} addJob={addJob}/>}></Route>
         <Route path="/login" element={<LoginForm login={login} />}></Route>
         <Route path="/signup" element={<SignupForm signup={signup} />}></Route>
         <Route path="/profile" element={<Profile userDetails={userDetails} setUserDetails={setUserDetails} />}></Route>
+        <Route path="/logout" element={<Navigate to="/"></Navigate>}></Route>
       </Routes>
       </userContext.Provider>
 

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import "./Login.css";
 
 // displays a form that allows user to login to an existing account
 // when submitted, the login function sets this user and their token as current in state
-const LoginForm = ({ login, logout, currentUser }) => {
+const LoginForm = ({ login }) => {
 
     const initial_state = {
         username: '',
@@ -27,12 +28,12 @@ const LoginForm = ({ login, logout, currentUser }) => {
     return (
         <div>
             <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
+            <form className="login-form" onSubmit={handleSubmit}>
                 <label htmlFor="username">Username:
-                <input type="text" name="username" value={username} id="username" onChange={handleChange}></input></label>
+                <input type="text" name="username" value={username} id="username" onChange={handleChange} autoComplete="username"></input></label>
                 <label htmlFor="password">Password:
-                <input type="text" name="password" value={password} id="password" onChange={handleChange}></input></label>
-                <button>Submit</button>
+                <input type="password" name="password" value={password} id="password" autoComplete="current-password" onChange={handleChange}></input></label>
+                <button className="login-button">Submit</button>
             </form>
         </div>
     )

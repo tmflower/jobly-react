@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import JoblyApi from "../api";
+import JoblyApi from "../../api.js";
 import JobCard from "./JobCard";
-import userContext from "./userContext";
+import userContext from "../Layout/userContext";
 import { useNavigate } from "react-router-dom";
+import balloon3 from "../Images/balloon3.jpg";
+import balloon5 from "../Images/balloon5.jpg";
+import "./JobsList.css";
 
-const JobsList = ({ userDetails }) => {
+const JobsList = ({ applications, addJob }) => {
 
     // provides current username
     const username = React.useContext(userContext);
@@ -52,15 +55,17 @@ const JobsList = ({ userDetails }) => {
     // displays a search bar allowing user to filter jobs by job title
     return (
         <div>
-            <h1>Jobs</h1>
+            <img src={balloon3} className="balloon4" alt="yellow hot air balloon with girl"/>
+            <h3>Check out our current job openings!</h3>
+            <img src={balloon5} className="balloon6" alt="yellow hot air balloon with girl"/>
             { username === null ? <div><h3>You must log in to see our jobs.</h3><button onClick={forceLogin}>Log In</button></div> :
             <div>
                 <form onSubmit={handleSubmit}>
-                    <label htmlFor="searchTerm">
+                    <label htmlFor="searchTerm">Search for a job
                     <input 
                         id="searchTerm" 
                         type="text" 
-                        placeholder="Enter search terms" 
+                        placeholder="Enter job title" 
                         name="searchTerm" 
                         value={searchTerm} 
                         onChange={handleChange}/></label>
@@ -73,7 +78,8 @@ const JobsList = ({ userDetails }) => {
                                     salary={job.salary} 
                                     equity={job.equity} 
                                     key={job.id}
-                                    userDetails={userDetails} />))}
+                                    applications={applications}
+                                    addJob={addJob} />))}
             </div>
             }
         </div>
